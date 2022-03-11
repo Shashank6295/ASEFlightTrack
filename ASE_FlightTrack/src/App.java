@@ -1,3 +1,12 @@
+/*Author: Shashank A.V
+ * Date: 28/02/2022
+ * App.java aims at creating GUI interface using SWING and AWT toolkits for the flight tracking system which
+ * displays the flight details from FlightFile.txt and accordingly calculates 
+ * total distance covered, time taken, fuel consumption and co2 emission for the
+ * flight selected
+ * 
+ */
+
 import core.Airport;
 import core.Flight;
 import exception.DataNotFoundException;
@@ -33,23 +42,23 @@ public class App extends JFrame implements ActionListener {
 
 
     private App() {
-        super("Flights Tracking System");
+        super("Flights Tracking System"); 
         fileManager = new DataExtractor();
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         width = screenSize.width;
         height = screenSize.height;
         setSize(width, height);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        
+        //creating panel
         JPanel jPanel = new JPanel();
         data = getFlights();
-
+         //creating new component table with flight details
         flightTable = new JTable(data, getColumnNames());
 
         scrollPane = new JScrollPane(flightTable);
         scrollPane.setPreferredSize(new Dimension((width * 69)/100, (height * 45)/100));
         flightTable.setFillsViewportHeight(true);
-
+         //creating and setting size of GridBagLayout 
         panel = new JPanel(new GridBagLayout());
         panel.add(scrollPane);
         panel.setPreferredSize(new Dimension((width * 70)/100, height/2));
@@ -59,29 +68,34 @@ public class App extends JFrame implements ActionListener {
         jPanel.add(panel);
 
         updateFlightPlanTable(data[0][0], jPanel);
-
+         //Adding labels for Distance, Time,Fuel consumption,Co2 emission
         JLabel distanceLabel = new JLabel("Distance (km) :");
         JLabel timeLabel = new JLabel("Time (hr):");
         JLabel fuelConsumptionLabel = new JLabel("Fuel Consumption (litre):");
-        JLabel coLabel = new JLabel("CO2 (kg):");
-
+        JLabel co2EmissionLabel = new JLabel("CO2 (kg):");
+        
+         //Creating and setting of text area for calculation of Distance, Time,Fuel consumption,Co2 emission based on flight selected
         JTextArea distanceTextArea = new JTextArea(1,5);
         distanceTextArea.setFont(new Font("times new roman", Font.PLAIN, 18));
         distanceTextArea.setEditable(false);
-        distanceTextArea.setText(getDistance(getFlights()[0][0]));
+        distanceTextArea.setText(getDistance(getFlights()[0][0]));//display of total distance travelled from getDistance() based on flight selected
+
         JTextArea timeTextArea = new JTextArea(1,5);
         timeTextArea.setFont(new Font("times new roman", Font.PLAIN, 18));
         timeTextArea.setEditable(false);
-        timeTextArea.setText(getTime(getFlights()[0][0]));
+        timeTextArea.setText(getTime(getFlights()[0][0])); //display of total time taken for travel from getTime() based on flight selected
+
         JTextArea fuelTextArea = new JTextArea(1,5);
         fuelTextArea.setFont(new Font("times new roman", Font.PLAIN, 18));
         fuelTextArea.setEditable(false);
-        fuelTextArea.setText(getFuelConsumption(getFlights()[0][0]));
-        JTextArea coTextArea = new JTextArea(1,5);
-        coTextArea.setFont(new Font("times new roman", Font.PLAIN, 18));
-        coTextArea.setEditable(false);
-        coTextArea.setText(getCO2Emession(getFlights()[0][0]));
+        fuelTextArea.setText(getFuelConsumption(getFlights()[0][0]));//display of calculated fuel consumption value from getFuelConsumption() based on flight selected
 
+        JTextArea co2EmissionTextArea = new JTextArea(1,5);
+        co2EmissionTextArea.setFont(new Font("times new roman", Font.PLAIN, 18));
+        co2EmissionTextArea.setEditable(false);
+        co2EmissionTextArea.setText(getCO2Emession(getFlights()[0][0]));//display of calculated co2 emission value from getCO2Emession() based on flight selected
+         
+        //creating new panel and setting dimension for gridlayout to display calculated values
         JPanel jPanel1 = new JPanel(new GridLayout(8, 2));
         jPanel1.setPreferredSize(new Dimension((width * 11)/100, (height * 45)/100));
         jPanel1.add(distanceLabel);
@@ -90,8 +104,8 @@ public class App extends JFrame implements ActionListener {
         jPanel1.add(timeTextArea);
         jPanel1.add(fuelConsumptionLabel);
         jPanel1.add(fuelTextArea);
-        jPanel1.add(coLabel);
-        jPanel1.add(coTextArea);
+        jPanel1.add(co2EmissionLabel);
+        jPanel1.add(co2EmissionTextArea);
         panel = new JPanel(new GridBagLayout());
         panel.add(jPanel1);
         panel.setPreferredSize(new Dimension((width * 12)/100, height/2));
@@ -111,20 +125,21 @@ public class App extends JFrame implements ActionListener {
 
                     distanceTextArea.setText(getDistance(flightCode));
                     timeTextArea.setText(getTime(flightCode));
-                    coTextArea.setText(getCO2Emession(flightCode));
+                    co2EmissionTextArea.setText(getCO2Emession(flightCode));
                     fuelTextArea.setText(getFuelConsumption(flightCode));
                 }
             }
         });
         setVisible(true);
     }
-
+  // Displaying flightplan based on flight selected
     private void updateFlightPlanTable(String flightCode, JPanel jPanel){
         flightPlanTable = new JTable(getFlightPlan(flightCode), new String[]{ ""});
         flightPlanTable.repaint();
         scrollPane = new JScrollPane(flightPlanTable);
         scrollPane.setPreferredSize(new Dimension((width * 14)/100, (height * 45)/100));
         flightPlanTable.setFillsViewportHeight(true);
+        //adding new panel for flightplan and setting dimension for gridbag layout 
         panel = new JPanel(new GridBagLayout());
         panel.add(scrollPane);
         panel.setPreferredSize(new Dimension((width * 15)/100, height/2));
@@ -145,8 +160,8 @@ public class App extends JFrame implements ActionListener {
                 String[] flightData = new String[]{
                         flights1[i].getId(),
                         flights1[i].getPlaneType().getModel(),
-                        flights1[i].getDeparture().getCode(),
-                        flights1[i].getairportDestination().getCode(),
+                        flights1[i].getairportDeparture().getairportCode(),
+                        flights1[i].getairportDestination().getairportCode(),
                         flights1[i].getDepartureDate().toString(),
                         flights1[i].getDepartureTime().toString(),
                         null
@@ -158,7 +173,7 @@ public class App extends JFrame implements ActionListener {
         }
         return data;
     }
-
+// adding column names to Jtable for Plane details
     String[] getColumnNames() {
         return new String[]{
                 "Flight",
@@ -178,7 +193,7 @@ public class App extends JFrame implements ActionListener {
         airports.toArray(ports);
         for (int i = 0; i < ports.length; i++) {
             String[] airportData = new String[]{
-                    ports[i].getCode(),
+                    ports[i].getairportCode(),
             };
             data[i] = airportData;
         }
@@ -207,7 +222,7 @@ public class App extends JFrame implements ActionListener {
         String num = null;
         try {
             Flight flight = getFlight(flightCode);
-            DecimalFormat df = new DecimalFormat("###.##");
+            DecimalFormat df = new DecimalFormat("###.##");//setting decimal format for distance
             num = df.format(flight.calculateDistance());
         } catch (DataNotFoundException e) {
             System.out.println(e.getMessage());
@@ -231,7 +246,7 @@ public class App extends JFrame implements ActionListener {
         String num = null;
         try {
             Flight flight = getFlight(flightCode);
-            DecimalFormat df = new DecimalFormat("###.##");
+            DecimalFormat df = new DecimalFormat("###.##"); //setting decimal format for co2emission value
             num = df.format(flight.CO2_emission());
         } catch (DataNotFoundException e) {
             System.out.println(e.getMessage());
@@ -243,7 +258,7 @@ public class App extends JFrame implements ActionListener {
         String num = null;
         try {
             Flight flight = getFlight(flightCode);
-            DecimalFormat df = new DecimalFormat("###.##");
+            DecimalFormat df = new DecimalFormat("###.##");//setting decimal format for fuelconsumption value
             num = df.format(flight.fuelConsumption());
         } catch (DataNotFoundException e) {
             System.out.println(e.getMessage());
@@ -260,7 +275,7 @@ public class App extends JFrame implements ActionListener {
 				// TODO Auto-generated method stub
 		        App app = new App();
 		        app.setVisible(true);
-//		        app.setVisible(true);
+//		        
 			}
 		});
 

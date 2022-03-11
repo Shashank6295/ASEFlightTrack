@@ -1,3 +1,10 @@
+/*Author: Dennish K.C
+ * Date: 04/03/2022
+ * ControlTower.java contains declaration of the attributes along with getter 
+ * and setter methods to enable to be accessed by other classes. 
+ * distanceBetweenGPS() method is implemented to calculate distance between 2 GPS locations.
+ * 
+ */
 package core;
 import exception.DataNotFoundException;
 
@@ -7,28 +14,31 @@ public class ControlTower {
     public ControlTower() {
     }
 
+    //to assign control tower GPscoordinate
     public ControlTower(GPSCoordinate gpsCoordinate) {
         this.gpsCoordinate = gpsCoordinate;
     }
 
     public GPSCoordinate getGpsCoordinate() {
-        return gpsCoordinate;
+        return gpsCoordinate; //returns GPscoordinate
     }
 
     public void setGpsCoordinate(GPSCoordinate gpsCoordinate) {
         this.gpsCoordinate = gpsCoordinate;
     }
-
-    public double distanceBetween(ControlTower controlTower) throws DataNotFoundException {
+    
+    //method to calculate distance between 2 GPS coordinates
+    public double distanceBetweenGPS(ControlTower controlTower) throws DataNotFoundException {
         GPSCoordinate gpsCoordinate = this.gpsCoordinate;
-        double latInRadian = Math.toRadians(gpsCoordinate.getLatInDegree());
-        double lngInRadian = Math.toRadians(gpsCoordinate.getLngInDegree());
-        GPSCoordinate gpsCoordinate1 = controlTower.gpsCoordinate;
-        if (gpsCoordinate1 == null){
-            throw new DataNotFoundException("GPS coordinates not found.");
+        
+        double latInRadian = Math.toRadians(gpsCoordinate.getLatInDegree());//latitude conversion to radian from degree
+        double lngInRadian = Math.toRadians(gpsCoordinate.getLngInDegree()); //longitude conversion to radian from degree
+        GPSCoordinate gpsCoords = controlTower.gpsCoordinate;
+        if (gpsCoords == null){
+            throw new DataNotFoundException("GPS coordinates are missing.");
         }
-        double otherLatInRadian = Math.toRadians(gpsCoordinate1.getLatInDegree());
-        double otherLngInRadian = Math.toRadians(gpsCoordinate1.getLngInDegree());
+        double otherLatInRadian = Math.toRadians(gpsCoords.getLatInDegree());
+        double otherLngInRadian = Math.toRadians(gpsCoords.getLngInDegree());
         double deltaLng = otherLngInRadian - lngInRadian;
         double deltaLat = otherLatInRadian - latInRadian;
         double trig = Math.pow(Math.sin(deltaLat / 2), 2.0) + Math.cos(latInRadian)

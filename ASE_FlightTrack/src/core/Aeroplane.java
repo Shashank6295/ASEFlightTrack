@@ -1,3 +1,9 @@
+/*Author: Akash Palanivel
+ * Date: 01/03/2022
+ * Aeroplane.java contains declaration of the attributes along with getter 
+ * and setter methods to enable to be accessed by other classes
+ * 
+ */
 package core;
 
 public class Aeroplane {
@@ -8,15 +14,15 @@ public class Aeroplane {
     private Double fuelConsumption;
 
     public String getModel() {
-        return model;
+        return model; //returns plane model
     }
 
     public void setModel(String model) {
-        this.model = model;
+        this.model = model; //to assign new plane model
     }
 
     public Double getSpeed() {
-        return speed;
+        return speed;// returns aeroplane speed
     }
 
     public void setSpeed(Double speed) {
@@ -36,6 +42,6 @@ public class Aeroplane {
     }
 
     public void setFuelConsumption(Double fuelConsumption) {
-        this.fuelConsumption = fuelConsumption;
+        this.fuelConsumption = fuelConsumption;//to assign new fuel assumption for a plane
     }
 }

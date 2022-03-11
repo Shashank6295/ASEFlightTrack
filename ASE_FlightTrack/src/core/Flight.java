@@ -1,3 +1,14 @@
+/*Author: Ankitha Cherian
+ * Date: 04/03/2022
+ * Flight.java contains declaration of the attributes along with getter 
+ * and setter methods to enable to be accessed by other classes. 
+ * The class containes calculateDistance() to  calculate total distance travelled in km by selected flight.
+ * timeTaken() to calculate the total time in hours taken for the travel.
+ * fuelConsumption() to calculate the total fuelConsumption in litres depending on distance travelled
+ * CO2emission() to calculate CO2 emission in kg depending on fuelConsumption of the selected plane
+ * 
+ * 
+ */
 package core;
 
 import exception.DataNotFoundException;
@@ -9,6 +20,7 @@ import java.util.stream.Collectors;
 
 public class Flight {
 
+	//declaration of all attributes
     private String id;
     private Aeroplane planeType;
     private Airport airportDeparture;
@@ -19,19 +31,19 @@ public class Flight {
     private Airline airline;
 
     public FlightPlan getFlightPlan() {
-        return flightPlan;
+        return flightPlan; //to return  flight plan
     }
 
     public void setFlightPlan(FlightPlan flightPlan) {
-        this.flightPlan = flightPlan;
+        this.flightPlan = flightPlan; //to assign new flight plan
     }
 
     public Airline getAirline() {
-        return airline;
+        return airline; //to retrieve the airline
     }
 
     public void setAirline(Airline airline) {
-        this.airline = airline;
+        this.airline = airline; //sets new airline
     }
 
     public String getId() {
@@ -43,15 +55,15 @@ public class Flight {
     }
 
     public Aeroplane getPlaneType() {
-        return planeType;
+        return planeType; //to retrieve the plane type
     }
 
     public void setPlaneType(Aeroplane planeType) {
-        this.planeType = planeType;
+        this.planeType = planeType;// to set new plane type
     }
 
-    public Airport getDeparture() {
-        return airportDeparture;
+    public Airport getairportDeparture() {
+        return airportDeparture;// to return departure airport
     }
 
     public void setairportDeparture(Airport airportDeparture) {
@@ -59,29 +71,30 @@ public class Flight {
     }
 
     public Airport getairportDestination() {
-        return airportDestination;
+        return airportDestination; // to return destination airport
     }
 
-    public void setDestination(Airport airportDestination) {
-        this.airportDestination = airportDestination;
+    public void getairportDestination(Airport newairportDestination) {
+        this.airportDestination = newairportDestination;// to assign new departure airport
     }
 
     public LocalDate getDepartureDate() {
-        return departureDate;
+        return departureDate; //// to return date of departure
     }
 
     public void setDepartureDate(LocalDate departureDate) {
-        this.departureDate = departureDate;
+        this.departureDate = departureDate; //to set new date of departure
     }
 
     public LocalTime getDepartureTime() {
-        return departureTime;
+        return departureTime; //to return time of departure
     }
 
     public void setDepartureTime(LocalTime departureTime) {
-        this.departureTime = departureTime;
+        this.departureTime = departureTime;//to add new time  of departure
     }
 
+    //to calculate total distance travelled by flight
     public Double calculateDistance() throws DataNotFoundException {
         double distance = 0;
         ControlTower controlTower = this.airportDeparture.getControlTower();
@@ -103,12 +116,12 @@ public class Flight {
 //        System.out.println(longInRadian);
 
         for (ControlTower cntrlTower : controlTowers) {
-            GPSCoordinate gpsCoordinate = cntrlTower.getGpsCoordinate();
+            GPSCoordinate gpsCoordinate = cntrlTower.getGpsCoordinate(); //getting control tower gps coordinates
             if (gpsCoordinate == null) {
-                throw new DataNotFoundException("GPS coordinates not found.");
+                throw new DataNotFoundException("GPS coordinates are missing.");
             }
-            double otherLatInRadian = Math.toRadians(gpsCoordinate.getLatInDegree());
-            Double otherLngInRadian = Math.toRadians(gpsCoordinate.getLngInDegree());
+            double otherLatInRadian = Math.toRadians(gpsCoordinate.getLatInDegree());//latitude conversion to radian from degree
+            Double otherLngInRadian = Math.toRadians(gpsCoordinate.getLngInDegree());//longitude conversion to radian from degree
             double deltaLongitude = otherLngInRadian - longInRadian;
             Double deltaLatitude = otherLatInRadian - latInRadian;
             double trig = Math.pow(Math.sin(deltaLatitude / 2), 2.0) + Math.cos(latInRadian)
@@ -129,6 +142,7 @@ public class Flight {
         return distance;
     }
 
+  //to calculate total time taken by flight
     public Double timeTaken() throws DataNotFoundException {
         double timeTaken = 0.0;
         Aeroplane aeroplane = this.getPlaneType();
@@ -146,26 +160,29 @@ public class Flight {
             throw new DataNotFoundException("Control towers not found.");
         }
         for (ControlTower controlTower: controlTowers) {
+        	
             Double distanceBetweenControlTower = departureControlTower
-                    .distanceBetween(controlTower);
-            timeTaken += distanceBetweenControlTower / speed;
+                    .distanceBetweenGPS(controlTower);
+            timeTaken = timeTaken + distanceBetweenControlTower / speed;
             departureControlTower = controlTower;
         }
         return timeTaken;
     }
 
+    ///to calculate fuelconsumption 
     public Double fuelConsumption() throws DataNotFoundException {
         Aeroplane aeroplane = this.getPlaneType();
-        Double fuelConsumption = aeroplane.getFuelConsumption();
+        Double fuelConsumption = aeroplane.getFuelConsumption();//retrieve fuelconsumption of selected flight
         if (fuelConsumption == null){
-            throw new DataNotFoundException("Fuel consumption for the selected plane is null.");
+            throw new DataNotFoundException("Fuel consumption is null.");
         }
-        Double distance = this.calculateDistance();
+        Double distance = this.calculateDistance(); //retrieve total distance
         return distance * fuelConsumption / 100;
     }
 
+    //to calculate CO2 emission for selected flight
     public Double CO2_emission() throws DataNotFoundException{
-        return this.fuelConsumption() * 4.98;//Emission factor
+        return this.fuelConsumption() * 4.98;//Emission factor is set as constant :4.98
     }
 
 	

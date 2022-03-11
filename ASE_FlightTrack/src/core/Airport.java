@@ -1,3 +1,9 @@
+/*Author: Shashank A.V
+ * Date: 01/03/2022
+ * Airport.java contains declaration of the attributes along with getter 
+ * and setter methods to enable to be accessed by other classes
+ * 
+ */
 package core;
 
 public class Airport {
@@ -6,24 +12,24 @@ public class Airport {
     private String airportCode;
     private ControlTower controlTower;
 
-    public String getName() {
+    public String getairportName() {
         return airportName;
     }
-
-    public void setName(String name) {
+  //to assign  airport name
+    public void setairportName(String name) {
         this.airportName = name;
     }
-
-    public String getCode() {
+// returns airportcode
+    public String getairportCode() {
         return airportCode;
     }
-
-    public void setCode(String code) {
+  //to assign new airport code
+    public void setairportCode(String code) {
         this.airportCode = code;
     }
 
     public ControlTower getControlTower() {
-        return controlTower;
+        return controlTower;//returns departure airport controltower
     }
 
     public void setControlTower(ControlTower controlTower) {
